@@ -1,0 +1,27 @@
+name: frontend-ci
+on:
+  push:
+  pull_request:
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - name: Unit and display smoke tests with coverage
+        run: npm run coverage
+      - name: Static build
+        run: npm run build
+        env:
+          VITE_API_BASE_URL: https://bf-backend.example.invalid
+      - name: Dependency audit (production dependencies)
+        run: npm audit --omit=dev --audit-level=high
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
