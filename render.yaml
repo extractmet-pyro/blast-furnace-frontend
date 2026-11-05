@@ -1,0 +1,36 @@
+# Render Blueprint - FRONTEND repository (static site). Checked against render.com/docs/blueprint-spec (Nov 2026).
+# VITE_API_BASE_URL is read at BUILD time: set it to the backend URL, then redeploy when it changes.
+services:
+  - type: web
+    name: bf-twin-frontend
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    autoDeployTrigger: commit
+    envVars:
+      - key: NODE_VERSION
+        value: 22.23.4
+      - key: VITE_API_BASE_URL
+        sync: false            # e.g. https://bf-twin-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+      # Tested with the built bundle (no inline scripts, no eval). connect-src allows the HTTPS/WSS backend;
+      # tighten it to the exact backend origin once the backend URL is final.
+      - path: /*
+        name: Content-Security-Policy
+        value: "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https: wss:; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"

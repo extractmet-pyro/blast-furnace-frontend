@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BF Twin desk - Extractmet</title>
+  <meta name="description" content="Blast furnace digital twin, process simulator and advisory supervisory control - operator desk" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <!-- Fonts are bundled (fontsource, OFL-1.1): no external requests, so the desk works on isolated plant networks. -->
+</head>
+<body>
+  <div id="app" class="shell">
+    <header class="strip" id="strip" aria-label="Situation strip"></header>
+    <nav class="rail" id="rail" aria-label="Displays"></nav>
+    <main id="view" tabindex="-1"></main>
+  </div>
+  <div class="toast-wrap" id="toasts" aria-live="polite"></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
